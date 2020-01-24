@@ -5,7 +5,7 @@
 				<div class="content">
 					<div class="header">About</div>
 					<div class="description">
-						About Content
+						<p v-if="user">{{ user }}</p>
 					</div>
 				</div>
 			</div>
@@ -14,5 +14,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+	data() {
+		return {
+			user: null
+		}
+	},
+
+	mounted() {
+		axios.get('/api/about', { withCredentials: true })
+			.then(response => {
+				console.log(response.data);
+				this.user = response.data;
+			})
+	}
+};
 </script>

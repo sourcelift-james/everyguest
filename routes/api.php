@@ -23,3 +23,7 @@ Route::group([ 'prefix' => 'auth'], function (){
         Route::get('getuser', 'API\AuthController@getUser');
     });
 });
+
+Route::group(['middleware' => ['auth:api']], function() {
+	Route::get('about', 'SPAController@about');
+});

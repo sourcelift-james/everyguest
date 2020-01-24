@@ -10,4 +10,8 @@ class SPAController extends Controller
 	{
 		return view('home');
 	}
+
+	public function about(Request $request) {
+		return $request->user()->name;
+	}
 }
