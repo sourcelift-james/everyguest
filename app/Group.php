@@ -3,12 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Concerns\UsesUuid;
 
 class Group extends Model
 {
-	use UsesUuid;
-
 	protected $primaryKey = 'id';
 
 	public $timestamps = true;

@@ -12,10 +12,6 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-	public $incrementing = false;
-
-	protected $keyType = 'string';
-
 	protected $primaryKey = 'id';
 
 	public $timestamps = true;
@@ -51,15 +47,4 @@ class User extends Authenticatable
 	{
 		return $this->hasOne('App\Group', 'id', 'group_id');
 	}
-
-    protected static function boot()
-    {
-		parent::boot();
-
-        static::creating(function ($model) {
-            if (! $model->getKey()) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
-            }
-        });
-    }
 }
