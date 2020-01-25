@@ -23,21 +23,6 @@
 	<link href="{{ asset('css/semantic.min.css') }}" rel="stylesheet">
 </head>
 <body>
-	<div class="ui top attached demo menu">
-		<a class="item toggle button">
-			<i class="sidebar icon"></i>
-				Menu
-		</a>
-	</div>
-    <div id="app">
-		<div class="ui sidebar inverted vertical menu">
-			<router-link class="item" to="/home">Home</router-link>
-			<router-link class="item" to="/about">About</router-link>
-			<router-link class="item" to="/group/create">Create Group</router-link>
-		</div>
-        <div class="pusher">
-            @yield('content')
-        </div>
-    </div>
+	@yield('content')
 </body>
 </html>

@@ -1,15 +1,7 @@
 <template>
-	<div class="ui basic segment">
-		<div class="ui cards">
-			<div class="card">
-				<div class="content">
-					<div class="header">Home</div>
-					<div class="description">
-						Home Content
-					</div>
-				</div>
-			</div>
-		</div>
+	<div>
+		<h2>Home Content Stuff</h2>
+		<p>More content.</p>
 	</div>
 </template>
 
