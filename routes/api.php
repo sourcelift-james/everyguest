@@ -26,4 +26,8 @@ Route::group([ 'prefix' => 'auth'], function (){
 
 Route::group(['middleware' => ['auth:api']], function() {
 	Route::get('about', 'SPAController@about');
+	Route::get('getuser', 'SPAController@getUser');
+
+	// Group Routes
+	Route::post('group/create', 'GroupController@create');
 });
