@@ -14,4 +14,8 @@ class SPAController extends Controller
 	public function about(Request $request) {
 		return $request->user()->name;
 	}
+
+	public function getUser() {
+		return request()->user();
+	}
 }
