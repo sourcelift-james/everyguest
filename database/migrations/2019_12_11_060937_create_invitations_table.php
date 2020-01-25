@@ -14,9 +14,9 @@ class CreateInvitationsTable extends Migration
     public function up()
     {
         Schema::create('invitations', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-			$table->uuid('group_id');
-			$table->uuid('creator_id');
+            $table->increments('id')->primary();
+			$table->integer('group_id');
+			$table->integer('creator_id');
 			$table->timestamp('expired_at')->nullable();
 			$table->text('custom')->nullable();
             $table->timestamps();

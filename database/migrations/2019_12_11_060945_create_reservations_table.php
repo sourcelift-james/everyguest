@@ -14,10 +14,10 @@ class CreateReservationsTable extends Migration
     public function up()
     {
         Schema::create('reservations', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-			$table->uuid('guest_id');
-			$table->uuid('space_id');
-			$table->uuid('group_id');
+            $table->increments('id')->primary();
+			$table->integer('guest_id');
+			$table->integer('space_id');
+			$table->integer('group_id');
 			$table->timestamp('starts_at');
 			$table->timestamp('ends_at');
 			$table->string('notes')->nullable();
