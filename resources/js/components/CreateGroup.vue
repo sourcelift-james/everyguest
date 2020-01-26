@@ -4,8 +4,8 @@
 			<div class="ui text loader">Loading</div>
 		</div>
 		<h2 class="header">Create a Group</h2>
-		<div v-if="user.group">
-			<p>Users may not have more than one group.</p>
+		<div v-if="user.group_id" class="ui message red">
+			<p>You already belong to a group, and may not create another.</p>
 		</div>
 		<div v-else>
 			<form @submit.prevent="submit">

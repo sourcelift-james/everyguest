@@ -5,6 +5,7 @@
 		</div>
 		<h2 class="header">About</h2>
 		<p v-if="user">{{ user.name }}</p>
+		<p v-if="user.group_id">{{ user.group_id }}</p>
 	</div>
 </template>
 
@@ -13,7 +14,7 @@ export default {
 	data: function() {
 		return {
 			user: '',
-			isLoading: true	
+			isLoading: true
 		}
 	},
 	mounted: function() {

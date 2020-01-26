@@ -1848,6 +1848,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2475,7 +2476,9 @@ var render = function() {
     _vm._v(" "),
     _c("h2", { staticClass: "header" }, [_vm._v("About")]),
     _vm._v(" "),
-    _vm.user ? _c("p", [_vm._v(_vm._s(_vm.user.name))]) : _vm._e()
+    _vm.user ? _c("p", [_vm._v(_vm._s(_vm.user.name))]) : _vm._e(),
+    _vm._v(" "),
+    _vm.user.group_id ? _c("p", [_vm._v(_vm._s(_vm.user.group_id))]) : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -2507,9 +2510,11 @@ var render = function() {
     _vm._v(" "),
     _c("h2", { staticClass: "header" }, [_vm._v("Create a Group")]),
     _vm._v(" "),
-    _vm.user.group
-      ? _c("div", [
-          _c("p", [_vm._v("Users may not have more than one group.")])
+    _vm.user.group_id
+      ? _c("div", { staticClass: "ui message red" }, [
+          _c("p", [
+            _vm._v("You already belong to a group, and may not create another.")
+          ])
         ])
       : _c("div", [
           _c(
