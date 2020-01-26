@@ -27,14 +27,14 @@ class GroupController extends Controller
 
 		// Create group with name from form entry, user id from $request->user
 		// and set the user's group to the group ID of the newly-created group
-		$newGroup = new \App\Group;
-		$newGroup->name = $request->input('name');
-		$newGroup->owner_id = $request->user()->id;
-		//$newGroup->save();
+		$newGroup = \App\Group::create([
+			'name' => $request->input('name'),
+			'owner_id' => $request->user()->id,
+		]);
 
 		$request->user()->group_id = $newGroup->id;
 
-		//$request->user()->save();
+		$request->user()->save();
 
 		return response('Group created successfully.', 200);
 	}

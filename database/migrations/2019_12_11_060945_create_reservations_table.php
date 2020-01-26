@@ -14,7 +14,7 @@ class CreateReservationsTable extends Migration
     public function up()
     {
         Schema::create('reservations', function (Blueprint $table) {
-            $table->increments('id')->primary();
+            $table->increments('id');
 			$table->integer('guest_id');
 			$table->integer('space_id');
 			$table->integer('group_id');

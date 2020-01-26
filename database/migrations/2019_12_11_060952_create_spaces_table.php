@@ -14,7 +14,7 @@ class CreateSpacesTable extends Migration
     public function up()
     {
         Schema::create('spaces', function (Blueprint $table) {
-            $table->increments('id')->primary();
+            $table->increments('id');
 			$table->integer('group_id');
 			$table->string('name');
 			$table->smallInteger('capacity')->default(1);
