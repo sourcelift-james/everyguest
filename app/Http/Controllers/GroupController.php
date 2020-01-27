@@ -38,4 +38,40 @@ class GroupController extends Controller
 
 		return response('Group created successfully.', 200);
 	}
+
+	public function show(Request $request, $id) {
+
+		$id = intval($request->params('id'));
+
+		if (!is_int($id)) {
+			return response('Invalid ID.', 400);
+		}
+
+		$group = \App\Group::find($id)->first();
+
+		if (!$group) {
+			return response ('No group found.', 400);
+		}
+
+		return $group;
+	}
+
+	public function members(Request $request, $id) {
+
+		$id = intval($request->params('id'));
+
+		if (!is_int($id)) {
+			return response('Invalid ID.', 400);
+		}
+
+		$group = \App\Group::find($id)->first();
+
+		if (!$group) {
+			return response ('No group found.', 400);
+		}
+
+		$members = \App\User::where('group_id', $group->id)->get();
+
+		return $members;
+	}
 }

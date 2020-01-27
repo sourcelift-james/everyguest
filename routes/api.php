@@ -30,4 +30,6 @@ Route::group(['middleware' => ['auth:api']], function() {
 
 	// Group Routes
 	Route::post('group/create', 'GroupController@create');
+	Route::get('group/{id}', 'GroupController@show');
+	Route::get('group/{id}/members', 'GroupController@members');
 });
