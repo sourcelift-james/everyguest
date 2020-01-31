@@ -39,7 +39,8 @@ export default {
 		}).
 		then(response => {
 			this.members = response.data;
-		});
+		}).
+		catch(this.$root.errorHandler);
 	}
 };
 </script>

@@ -40,7 +40,7 @@ class GroupController extends Controller
 	}
 
 	public function show(Request $request, $id) {
-
+		
 		$id = intval($id);
 
 		$group = \App\Group::find($id)->first();

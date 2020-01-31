@@ -48,7 +48,8 @@ export default {
 
 			this.group = response.data;
 			this.name = this.group.name;
-		});
+		}).
+		catch(this.$root.errorHandler);
 	},
 	methods: {
 		updateName() {
@@ -57,7 +58,8 @@ export default {
 			},  { withCredentials: true }).
 			then(response => {
 				this.message = response.data;
-			});
+			}).
+			catch(this.$root.errorHandler);
 		},
 		inviteMember() {
 			axios.post('/api/group/invite', {
@@ -65,8 +67,8 @@ export default {
 			},  { withCredentials: true }).
 			then(response => {
 				this.message = response.data;
-			});
-
+			}).
+			catch(this.$root.errorHandler);
 		}
 	}
 };

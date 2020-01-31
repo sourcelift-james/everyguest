@@ -1916,7 +1916,7 @@ __webpack_require__.r(__webpack_exports__);
       withCredentials: true
     }).then(function (response) {
       _this.user = response.data;
-    });
+    })["catch"](this.$root.errorHandler);
   },
   methods: {
     submit: function submit() {
@@ -1928,7 +1928,7 @@ __webpack_require__.r(__webpack_exports__);
         withCredentials: true
       }).then(function (response) {
         _this2.message = response.data;
-      });
+      })["catch"](this.$root.errorHandler);
     }
   }
 });
@@ -2005,7 +2005,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     }).then(function (response) {
       _this.members = response.data;
-    });
+    })["catch"](this.$root.errorHandler);
   }
 });
 
@@ -17915,11 +17915,17 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   data: {
     errorMessage: '',
     isLoading: false,
-    axiosIntercepter: null
+    axiosIntercepter: null,
+    access: true
   },
   mounted: function mounted() {
     this.enableInterceptor();
     this.enableErrorMonitor();
+  },
+  updated: function updated() {
+    if (this.$route.path != '/home') {
+      this.errorMessage = '';
+    }
   },
   router: new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"](_routes__WEBPACK_IMPORTED_MODULE_3__["default"]),
   components: {
@@ -17942,7 +17948,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
         _this.isLoading = false;
         return response;
       }, function (error) {
-        this.isLoading = false;
+        _this.isLoading = false;
         return Promise.reject(error);
       });
     },
@@ -17950,12 +17956,43 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
       axios.interceptors.request.eject(this.axiosIntercepter);
     },
     enableErrorMonitor: function enableErrorMonitor() {
+      var _this2 = this;
+
       axios.interceptors.response.use(function (config) {
         return config;
       }, function (error) {
-        this.errorMessage = error.response.data;
+        if (error.response) {
+          _this2.errorMessage = error.response.data;
+
+          if (error.response.status == 401) {
+            _this2.$router.push('home');
+          }
+        }
+
         return Promise.reject(error);
       });
+    },
+    errorHandler: function errorHandler(error) {
+      // Stolen shamelessly from https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
+      if (error.response) {
+        /*
+         * The request was made and the server responded with a
+         * status code that falls out of the range of 2xx
+         */
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        /*
+         * The request was made but no response was received, `error.request`
+         * is an instance of XMLHttpRequest in the browser and an instance
+         * of http.ClientRequest in Node.js
+         */
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request and triggered an Error
+        console.log('Error', error.message);
+      }
     }
   }
 });

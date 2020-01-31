@@ -33,7 +33,8 @@ export default {
 		axios.get('/api/getuser', { withCredentials: true }).
 		then(response => {
 			this.user = response.data;
-		});
+		}).
+		catch(this.$root.errorHandler);
 	},
 	methods: {
 		submit() {
@@ -42,7 +43,8 @@ export default {
 			},  { withCredentials: true }).
 			then(response => {
 				this.message = response.data;
-			});
+			}).
+			catch(this.$root.errorHandler);
 		}
 	}
 };
