@@ -1,8 +1,5 @@
 <template>
 	<div>
-		<div v-bind:class="{ active: isLoading }" class="ui dimmer">
-			<div class="ui text loader">Loading</div>
-		</div>
 		<h2 class="header" v-if="group">{{ group.name }}</h2>
 		<h5 class="header">Members</h5>
 		<div class="ui bulleted list">
@@ -19,8 +16,7 @@ export default {
 		return {
 			user: '',
 			group: '',
-			members: [],
-			isLoading: true
+			members: []
 		}
 	},
 	mounted: function() {
@@ -43,13 +39,6 @@ export default {
 		}).
 		then(response => {
 			this.members = response.data;
-			this.isLoading = false;
-		}).
-		catch(error => {
-
-			this.$root.errorMessage = error.response.data;
-
-			this.isLoading = false;
 		});
 	}
 };

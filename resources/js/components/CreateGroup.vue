@@ -1,8 +1,5 @@
 <template>
 	<div>
-		<div v-bind:class="{ active: isLoading }" class="ui dimmer">
-			<div class="ui text loader">Loading</div>
-		</div>
 		<h2 class="header">Create a Group</h2>
 		<div v-if="user.group_id" class="ui message red">
 			<p>You already belong to a group, and may not create another.</p>
@@ -27,7 +24,6 @@ export default {
 	data: function() {
 		return {
 			user: '',
-			isLoading: true,
 			name: '',
 			message: '',
 			messageColor: 'green',
@@ -37,7 +33,6 @@ export default {
 		axios.get('/api/getuser', { withCredentials: true }).
 		then(response => {
 			this.user = response.data;
-			this.isLoading = false;
 		});
 	},
 	methods: {
@@ -47,9 +42,6 @@ export default {
 			},  { withCredentials: true }).
 			then(response => {
 				this.message = response.data;
-				if (response.status != 200) {
-					this.messageColor = red;
-				}
 			});
 		}
 	}

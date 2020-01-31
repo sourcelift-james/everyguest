@@ -7,16 +7,54 @@ Vue.use(VueRouter);
 
 import SideMenu from './components/SideMenu';
 import ErrorMessage from './components/ErrorMessage';
+import Loader from './components/Loader';
 
 let app = new Vue({
 	el: '#app',
 	data: {
 		errorMessage: '',
+		isLoading: false,
+		axiosIntercepter: null
+	},
+	mounted() {
+		this.enableInterceptor();
+		this.enableErrorMonitor();
 	},
 	router: new VueRouter(routes),
 	components: {
 		'side-menu': SideMenu,
-		'error-message': ErrorMessage
+		'error-message': ErrorMessage,
+		'loader': Loader
+	},
+	methods: {
+		enableInterceptor() {
+			this.axiosInterceptor = axios.interceptors.request.use((config) => {
+				this.isLoading = true;
+				return config;
+			}, (error) => {
+				this.isLoading = false;
+				return Promise.reject(error);
+			});
+
+			axios.interceptors.response.use((response) => {
+				this.isLoading = false;
+				return response;
+			}, function(error) {
+				this.isLoading = false;
+				return Promise.reject(error);
+			});
+		},
+		disableInterceptor() {
+			axios.interceptors.request.eject(this.axiosIntercepter);
+		},
+		enableErrorMonitor() {
+			axios.interceptors.response.use((config) => {
+				return config;
+			}, function(error) {
+				this.errorMessage = error.response.data;
+				return Promise.reject(error);
+			});
+		}
 	}
 });
 
