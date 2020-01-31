@@ -6,13 +6,17 @@ import routes from './routes';
 Vue.use(VueRouter);
 
 import SideMenu from './components/SideMenu';
+import ErrorMessage from './components/ErrorMessage';
 
 let app = new Vue({
 	el: '#app',
-	data: {},
+	data: {
+		errorMessage: '',
+	},
 	router: new VueRouter(routes),
 	components: {
-		'side-menu': SideMenu
+		'side-menu': SideMenu,
+		'error-message': ErrorMessage
 	}
 });
 
