@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,16 +13,16 @@ class Invitation extends Model
 	];
 
 	protected $fillable = [
-		'group_id', 'creator_id', 'expired_at'
+		'group_id', 'creator_id', 'expired_at', 'token'
 	];
 
 	public function guests()
 	{
-		return $this->hasMany('App\Guest');
+		return $this->hasMany('App\Models\Guest');
 	}
 
 	public function group()
 	{
-		return $this->hasOne('App\Group', 'id', 'group_id');
+		return $this->hasOne('App\Models\Group', 'id', 'group_id');
 	}
 }

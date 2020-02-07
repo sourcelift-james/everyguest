@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,31 +16,31 @@ class Group extends Model
 
 	public function owner()
 	{
-		return $this->hasOne('App\User', 'id', 'owner_id');
+		return $this->hasOne('App\Models\User', 'id', 'owner_id');
 	}
 
 	public function members()
 	{
-		return $this->hasMany('App\User', 'group_id', 'id');
+		return $this->hasMany('App\Models\User', 'group_id', 'id');
 	}
 
 	public function guests()
 	{
-		return $this->hasMany('App\Guest');
+		return $this->hasMany('App\Models\Guest');
 	}
 
 	public function spaces()
 	{
-		return $this->hasMany('App\Space');
+		return $this->hasMany('App\Models\Space');
 	}
 
 	public function invitations()
 	{
-		return $this->hasMany('App\Invitation');
+		return $this->hasMany('App\Models\Invitation');
 	}
 
 	public function reservations()
 	{
-		return $this->hasMany('App\Reservation');
+		return $this->hasMany('App\Models\Reservation');
 	}
 }

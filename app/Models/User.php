@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -45,6 +45,6 @@ class User extends Authenticatable
 
 	public function group()
 	{
-		return $this->hasOne('App\Group', 'id', 'group_id');
+		return $this->hasOne('App\Models\Group', 'id', 'group_id');
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,16 +18,16 @@ class Reservation extends Model
 
 	public function guest()
 	{
-		return $this->hasOne('App\Guest');
+		return $this->hasOne('App\Models\Guest');
 	}
 
 	public function space()
 	{
-		return $this->hasOne('App\Space');
+		return $this->hasOne('App\Models\Space');
 	}
 
 	public function group()
 	{
-		return $this->hasOne('App\Group', 'id', 'group_id');
+		return $this->hasOne('App\Models\Group', 'id', 'group_id');
 	}
 }

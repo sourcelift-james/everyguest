@@ -16,6 +16,7 @@ class CreateGuestsTable extends Migration
         Schema::create('guests', function (Blueprint $table) {
             $table->increments('id');
 			$table->integer('group_id');
+			$table->integer('invitation_id');
 			$table->string('name');
 			$table->string('phone');
 			$table->string('email');

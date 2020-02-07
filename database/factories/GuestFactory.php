@@ -1,0 +1,21 @@
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Models\Guest;
+use App\Models\Group;
+use App\Models\Invitation;
+use Faker\Generator as Faker;
+
+$factory->define(Guest::class, function (Faker $faker) {
+    return [
+        'group_id' => factory(Group::class),
+        'invitation_id' => factory(Invitation::class),
+        'name' => $faker->name,
+        'phone' => $faker->phoneNumber,
+        'email' => $faker->safeEmail,
+        'arrMethod' => $faker->randomElement([
+            'Flying', 'Driving'
+        ])
+    ];
+});

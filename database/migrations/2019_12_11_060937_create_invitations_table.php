@@ -17,6 +17,7 @@ class CreateInvitationsTable extends Migration
             $table->increments('id');
 			$table->integer('group_id');
 			$table->integer('creator_id');
+			$table->string('token', 20);
 			$table->timestamp('expired_at')->nullable();
 			$table->text('custom')->nullable();
             $table->timestamps();
