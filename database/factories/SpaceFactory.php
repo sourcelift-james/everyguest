@@ -9,7 +9,7 @@ use App\Models\Group;
 $factory->define(Space::class, function (Faker $faker) {
     return [
         'group_id' => factory(Group::class),
-        'name' => $faker->name,
+        'name' => $faker->secondaryAddress,
         'capacity' => $faker->numberBetween(1, 5),
         'accommodations' => $faker->sentences(3, true),
         'notes' => $faker->sentences(2, true),
