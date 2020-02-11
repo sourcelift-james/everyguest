@@ -16,10 +16,11 @@ class CreateInvitationsTable extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->increments('id');
 			$table->integer('group_id');
+			$table->string('name');
 			$table->integer('creator_id');
-			$table->string('token', 20);
+			$table->string('token', 20)->default(Str::random(20));
 			$table->timestamp('expired_at')->nullable();
-			$table->text('custom')->nullable();
+			$table->json('details')->nullable();
             $table->timestamps();
         });
     }

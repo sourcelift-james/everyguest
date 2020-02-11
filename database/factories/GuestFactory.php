@@ -11,11 +11,21 @@ $factory->define(Guest::class, function (Faker $faker) {
     return [
         'group_id' => factory(Group::class),
         'invitation_id' => factory(Invitation::class),
-        'name' => $faker->name,
+        'first' => $faker->firstName,
+        'last' => $faker->lastName,
         'phone' => $faker->phoneNumber,
         'email' => $faker->safeEmail,
-        'arrMethod' => $faker->randomElement([
-            'Flying', 'Driving'
-        ])
+        'address' => $faker->streetAddress,
+        'city' => $faker->city,
+        'state' => $faker->state,
+        'zip' => $faker->postcode,
+        'arrivalMethod' => $faker->randomElement([
+            'Flight', 'Rented or Owned Vehicle'
+        ]),
+        'arrivalTime' => $faker->dateTimeThisMonth(),
+        'departureMethod' => $faker->randomElement([
+           'Flight', 'Rented or Owned Vehicle'
+        ]),
+        'notes' => $faker->sentences(3, true)
     ];
 });

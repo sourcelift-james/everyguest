@@ -17,13 +17,20 @@ class CreateGuestsTable extends Migration
             $table->increments('id');
 			$table->integer('group_id');
 			$table->integer('invitation_id');
-			$table->string('name');
+			$table->string('first');
+			$table->string('last');
 			$table->string('phone');
 			$table->string('email');
-			$table->string('arrMethod');
-			$table->text('arrDetails')->nullable();
+			$table->string('address');
+            $table->string('city');
+            $table->string('state');
+            $table->string('zip');
+			$table->string('arrivalMethod');
+			$table->timestamp('arrivalTime');
+			$table->string('departureMethod');
+			$table->timestamp('departureTime');
+			$table->json('details')->default('[]');
 			$table->string('notes')->nullable();
-			$table->text('custom')->nullable();
             $table->timestamps();
         });
     }
