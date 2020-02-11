@@ -25,8 +25,6 @@ Route::group([ 'prefix' => 'auth'], function (){
 });
 
 Route::group(['middleware' => ['auth:api']], function() {
-	Route::get('about', 'SPAController@about');
-	Route::get('getuser', 'SPAController@getUser');
 
 	/** Group Routes */
 
@@ -65,6 +63,12 @@ Route::group(['middleware' => ['auth:api']], function() {
 	Route::post('group/{id}/update', 'GroupController@update')
         ->where('id', '[0-9]+');
 
+    /**
+     * View list of group members.
+     */
+    Route::get('group/{group_id}/members', 'GroupController@index')
+        ->where('group_id', '[0-9]+');
+
 	/**
      * Invite new member.
      * TESTED.
@@ -79,5 +83,87 @@ Route::group(['middleware' => ['auth:api']], function() {
 	Route::post('group/{group_id}/members/{member_id}/remove', 'GroupController@dismissMember')
         ->where('group_id', '[0-9]+')
 	    ->where('member_id', '[0-9]+');
+
+
+	/** Space Routes */
+
+    /**
+     * View list of spaces.
+     */
+    Route::get('spaces', 'SpaceController@index');
+
+    /**
+     * Create a space to be reserved by a guest.
+     * TESTED.
+     */
+    Route::post('spaces/create', 'SpaceController@create');
+
+    /**
+     * Fetch space details.
+     * TESTED.
+     */
+    Route::get('spaces/{space_id}', 'SpaceController@show')
+        ->where('space_id', '[0-9]+');
+
+    /**
+     * Update space details.
+     * TESTED.
+     */
+    Route::post('spaces/{space_id}/update', 'SpaceController@update')
+        ->where('space_id', '[0-9]+');
+
+    /**
+     * Delete space.
+     * TESTED.
+     */
+    Route::post('spaces/{space_id}/delete', 'SpaceController@delete')
+        ->where('space_id', '[0-9]+');
+
+    /** Invitation Routes */
+
+    /**
+     * Get all invitations.
+     * WRITTEN.
+     */
+    Route::get('invitations', 'InvitationController@index');
+
+    /**
+     * Create an invitation.
+     * WRITTEN.
+     */
+    Route::post('invitations/create', 'InvitationController@create');
+
+    /**
+     * View invitation properties and fields.
+     * WRITTEN.
+     */
+    Route::get('invitations/{invitation_id}', 'InvitationController@show')
+        ->where('invitation_id', '[0-9]+');
+
+    /**
+     * Update invitation properties.
+     * WRITTEN.
+     */
+    Route::post('invitations/{invitation_id}/update', 'InvitationController@update')
+        ->where('invitation_id', '[0-9]+');
+
+    /**
+     * Delete invitation.
+     * WRITTEN.
+     */
+    Route::post('invitations/{invitation_id}', 'InvitationController@delete')
+        ->where('invitation_id', '[0-9]+');
+
+    /**
+     * Submitted invitation form for new guests.
+     * WRITTEN.
+     */
+    Route::get('welcome/{invitation_token}', 'InvitationController@display');
+
+    /**
+     * Submitted invitation form for new guests.
+     * WRITTEN.
+     */
+    Route::post('welcome/{invitation_token}', 'InvitationController@submit');
 
 });
