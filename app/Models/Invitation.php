@@ -13,7 +13,12 @@ class Invitation extends Model
 	];
 
 	protected $fillable = [
-		'group_id', 'creator_id', 'expired_at', 'token'
+		'group_id',
+        'name',
+        'creator_id',
+        'expired_at',
+        'token',
+        'details'
 	];
 
 	public function guests()

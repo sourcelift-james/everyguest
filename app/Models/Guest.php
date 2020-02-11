@@ -8,21 +8,35 @@ class Guest extends Model
 {
 	public $timestamps = true;
 
+    /**
+     * Base keys for form submissions.
+     * @var array
+     */
+    public $baseKeys = [
+        'first', 'last', 'phone', 'email', 'address', 'city', 'state', 'zip', 'arrivalMethod', 'arrivalTime', 'departureMethod', 'departureTime'
+    ];
+
 	protected $casts = [
-		'custom' => 'array',
-		'arrDetails' => 'array'
+        'details' => 'array',
 	];
 
 	protected $fillable = [
 		'group_id',
         'invitation_id',
-        'name',
+        'first',
+        'last',
         'phone',
         'email',
-        'arrMethod',
-        'arrDetails',
-        'notes',
-        'custom'
+        'address',
+        'city',
+        'state',
+        'zip',
+        'arrivalMethod',
+        'arrivalTime',
+        'departureMethod',
+        'departureTime',
+        'details',
+        'notes'
 	];
 
 	public function invitation()
