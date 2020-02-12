@@ -15,7 +15,7 @@ class CreateSpacesTable extends Migration
     {
         Schema::create('spaces', function (Blueprint $table) {
             $table->increments('id');
-			$table->integer('group_id');
+			$table->bigInteger('group_id')->index();
 			$table->string('name');
 			$table->smallInteger('capacity')->default(1);
 			$table->string('accommodations')->nullable();

@@ -15,9 +15,9 @@ class CreateInvitationsTable extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->increments('id');
-			$table->integer('group_id');
+			$table->bigInteger('group_id')->index();
 			$table->string('name');
-			$table->integer('creator_id');
+			$table->bigInteger('creator_id');
 			$table->string('token', 20)->default(Str::random(20));
 			$table->timestamp('expired_at')->nullable();
 			$table->json('details')->nullable();

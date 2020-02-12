@@ -15,9 +15,9 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
-			$table->integer('guest_id');
-			$table->integer('space_id');
-			$table->integer('group_id');
+			$table->bigInteger('guest_id')->index();
+			$table->bigInteger('space_id')->index();
+			$table->bigInteger('group_id')->index();
 			$table->timestamp('starts_at');
 			$table->timestamp('ends_at');
 			$table->string('notes')->nullable();
