@@ -22,7 +22,6 @@ class Guest extends Model
 
 	protected $fillable = [
 		'group_id',
-        'invitation_id',
         'first',
         'last',
         'phone',

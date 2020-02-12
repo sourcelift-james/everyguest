@@ -166,4 +166,38 @@ Route::group(['middleware' => ['auth:api']], function() {
      */
     Route::post('welcome/{invitation_token}', 'InvitationController@submit');
 
+    /** Reservation Routes */
+
+    /**
+     * List reservations.
+     * WRITTEN.
+     */
+    Route::get('reservations', 'ReservationController@index');
+
+    /**
+     * View a single reservation.
+     * WRITTEN.
+     */
+    Route::get('reservations/{reservation_id}', 'ReservationController@show')
+        ->where('reservation_id', '[0-9]+');
+
+    /**
+     * Create a reservation.
+     * WRITTEN.
+     */
+    Route::post('reservations/create', 'ReservationController@create');
+
+    /**
+     * Update a reservation.
+     * WRITTEN.
+     */
+    Route::post('reservations/{reservation_id}/update', 'ReservationController@update')
+        ->where('reservation_id', '[0-9]+');
+
+    /**
+     * Delete a reservation.
+     * WRITTEN.
+     */
+    Route::post('reservations/{reservation_id}/delete', 'ReservationController@delete')
+        ->where('reservation_id', '[0-9]+');
 });

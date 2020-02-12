@@ -223,7 +223,6 @@ class InvitationController extends Controller
         $guestDetails = $request->only($baseKeys);
 
         $guestDetails['group_id'] = $invitation->group_id;
-        $guestDetails['invitation_id'] = $invitation->id;
 
         $guestDetails['details'] = $details;
 
