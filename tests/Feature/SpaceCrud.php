@@ -40,6 +40,17 @@ class SpaceCrud extends TestCase
     }
 
     /** @test */
+    public function member_can_fetch_space_list()
+    {
+        $response = $this->actingAs($this->member, 'api')
+            ->json('GET', '/api/spaces');
+
+        $response->assertOk();
+
+        $response->assertSee(Space::where('group_id', $this->group->id)->get());
+    }
+
+    /** @test */
     public function owner_able_to_create_spaces()
     {
         $name = $this->faker->secondaryAddress;
