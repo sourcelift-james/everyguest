@@ -63,12 +63,6 @@ Route::group(['middleware' => ['auth:api']], function() {
 	Route::post('group/{id}/update', 'GroupController@update')
         ->where('id', '[0-9]+');
 
-    /**
-     * View list of group members.
-     */
-    Route::get('group/{group_id}/members', 'GroupController@index')
-        ->where('group_id', '[0-9]+');
-
 	/**
      * Invite new member.
      * TESTED.
@@ -89,6 +83,7 @@ Route::group(['middleware' => ['auth:api']], function() {
 
     /**
      * View list of spaces.
+     * TESTED.
      */
     Route::get('spaces', 'SpaceController@index');
 
@@ -160,44 +155,44 @@ Route::group(['middleware' => ['auth:api']], function() {
      */
     Route::get('welcome/{invitation_token}', 'InvitationController@display');
 
-    /**
-     * Submitted invitation form for new guests.
-     * WRITTEN.
-     */
-    Route::post('welcome/{invitation_token}', 'InvitationController@submit');
-
     /** Reservation Routes */
 
     /**
      * List reservations.
-     * WRITTEN.
+     * TESTED.
      */
     Route::get('reservations', 'ReservationController@index');
 
     /**
      * View a single reservation.
-     * WRITTEN.
+     * TESTED.
      */
     Route::get('reservations/{reservation_id}', 'ReservationController@show')
         ->where('reservation_id', '[0-9]+');
 
     /**
      * Create a reservation.
-     * WRITTEN.
+     * TESTED.
      */
     Route::post('reservations/create', 'ReservationController@create');
 
     /**
      * Update a reservation.
-     * WRITTEN.
+     * TESTED.
      */
     Route::post('reservations/{reservation_id}/update', 'ReservationController@update')
         ->where('reservation_id', '[0-9]+');
 
     /**
      * Delete a reservation.
-     * WRITTEN.
+     * TESTED.
      */
     Route::post('reservations/{reservation_id}/delete', 'ReservationController@delete')
         ->where('reservation_id', '[0-9]+');
 });
+
+/**
+ * Submitted invitation form for new guests.
+ * WRITTEN.
+ */
+Route::post('welcome/{invitation_token}', 'InvitationController@submit');
