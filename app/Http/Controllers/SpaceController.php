@@ -9,6 +9,16 @@ use Illuminate\Http\Request;
 class SpaceController extends Controller
 {
     /**
+     * Return list of spaces.
+     * @param Request $request
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        return Space::where('group_id', $request->user()->group_id)->get();
+    }
+
+    /**
      * Create a space to be reserved by a guest.
      * @param Request $request
      * @return Response

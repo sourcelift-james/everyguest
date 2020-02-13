@@ -6,6 +6,7 @@ use App\Models\Guest;
 use App\Models\Reservation;
 use App\Models\Space;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
@@ -54,6 +55,22 @@ class ReservationController extends Controller
             'ends_at' => 'required|date'
         ]);
 
+        /** Shed any time parameters that may have been added to the date. We're only using days. */
+        $starts_at = Carbon::parse($request->input('starts_at'));
+        $ends_at = Carbon::parse($request->input('ends_at'));
+
+        if (! $starts_at) {
+            return response('Your start date was invalid. Please try again.', 422);
+        }
+
+        if (! $ends_at) {
+            return response('Your end date was invalid. Please try again', 422);
+        }
+
+        if ($ends_at->lessThan($starts_at)) {
+            return response('Your reservation\'s end time must be after its start time.', 422);
+        }
+
         /** Validate existence of related entities. */
         $guest = Guest::find($request->input('guest_id'));
         $space = Space::find($request->input('space_id'));
@@ -75,54 +92,88 @@ class ReservationController extends Controller
             return response('That space does not belong to your group.', 401);
         }
 
-        /** Validate that no existing reservations exist for that space or guest. */
-        $starts_at = Carbon\Carbon::createFromDate($request->input('starts_at'));
-        $ends_at = Carbon\Carbon::createFromDate($request->input('ends_at'));
-
         $guestReservations = Reservation::where('guest_id', $guest->id)
-            ->where([
-                ['starts_at', '<=', $starts_at],
-                ['ends_at', '>=', $starts_at]
-            ])
-            ->orWhere([
-                ['starts_at', '<=', $ends_at],
-                ['ends_at', '>=', $ends_at]
-            ])
-            ->orWhere('starts_at', $starts_at)
-            ->orWhere('ends_at', $starts_at)
-            ->orWhere('starts_at', $ends_at)
-            ->orWhere('ends_at', $ends_at)
+            ->where(function($query) use ($starts_at, $ends_at) {
+                /**
+                 * If the submitted start time is between existing reservation times.
+                 */
+                $query->where([
+                    ['starts_at', '<=', $starts_at],
+                    ['ends_at', '>=', $starts_at]
+                ])
+                /**
+                 * If the submitted end time is between existing reservation times.
+                 */
+                ->orWhere([
+                    ['starts_at', '<=', $ends_at],
+                    ['ends_at', '>=', $ends_at]
+                ])
+                /**
+                 * If any existing reservation start times fall between the submitted start and end times.
+                 */
+                ->orWhereBetween('starts_at', [$starts_at, $ends_at ])
+                /**
+                 * If any existing reservation end times fall between the submitted start and end times.
+                 */
+                ->orWhereBetween('ends_at', [$starts_at, $ends_at ])
+                /**
+                 * If any starting or end times are exactly the same.
+                 */
+                ->orWhere('starts_at', $starts_at)
+                ->orWhere('ends_at', $starts_at)
+                ->orWhere('starts_at', $ends_at)
+                ->orWhere('ends_at', $ends_at);
+            })
             ->get();
 
         if (!! $guestReservations->count()) {
-            return response('That guest has already had a reservation for that time.', 422);
+            return response('That guest already has a reservation for that time.', 422);
         }
 
         $spaceReservations = Reservation::where('space_id', $space->id)
-            ->where([
-                ['starts_at', '<=', $starts_at],
-                ['ends_at', '>=', $starts_at]
-            ])
-            ->orWhere([
-                ['starts_at', '<=', $ends_at],
-                ['ends_at', '>=', $ends_at]
-            ])
-            ->orWhere('starts_at', $starts_at)
-            ->orWhere('ends_at', $starts_at)
-            ->orWhere('starts_at', $ends_at)
-            ->orWhere('ends_at', $ends_at)
+            ->where(function($query) use ($starts_at, $ends_at) {
+                /**
+                 * If the submitted start time is between existing reservation times.
+                 */
+                $query->where([
+                    ['starts_at', '<=', $starts_at],
+                    ['ends_at', '>=', $starts_at]
+                ])
+                    /**
+                     * If the submitted end time is between existing reservation times.
+                     */
+                    ->orWhere([
+                        ['starts_at', '<=', $ends_at],
+                        ['ends_at', '>=', $ends_at]
+                    ])
+                    /**
+                     * If any existing reservation start times fall between the submitted start and end times.
+                     */
+                    ->orWhereBetween('starts_at', [$starts_at, $ends_at ])
+                    /**
+                     * If any existing reservation end times fall between the submitted start and end times.
+                     */
+                    ->orWhereBetween('ends_at', [$starts_at, $ends_at ])
+                    /**
+                     * If any starting or end times are exactly the same.
+                     */
+                    ->orWhere('starts_at', $starts_at)
+                    ->orWhere('ends_at', $starts_at)
+                    ->orWhere('starts_at', $ends_at)
+                    ->orWhere('ends_at', $ends_at);
+            })
             ->get();
 
-        if ($spaceReservations >= $space->capacity) {
+        if ($spaceReservations->count() >= $space->capacity) {
             return response('That space has already reached its capacity for that time period.', 422);
         }
 
         Reservation::create([
             'guest_id' => $guest->id,
             'space_id' => $space->id,
-            'group_id' => $request->user()->group_io,
-            'starts_at' => $starts_at,
-            'ends_at' => $ends_at,
+            'group_id' => $request->user()->group_id,
+            'starts_at' => $starts_at->toDateString(),
+            'ends_at' => $ends_at->toDateString(),
             'notes' => $request->input('notes')
         ]);
 
@@ -150,6 +201,22 @@ class ReservationController extends Controller
             'ends_at' => 'required|date'
         ]);
 
+        /** Shed any time parameters that may have been added to the date. We're only using days. */
+        $starts_at = Carbon::parse($request->input('starts_at'));
+        $ends_at = Carbon::parse($request->input('ends_at'));
+
+        if (! $starts_at) {
+            return response('Your start date was invalid. Please try again.', 422);
+        }
+
+        if (! $ends_at) {
+            return response('Your end date was invalid. Please try again', 422);
+        }
+
+        if ($ends_at->lessThan($starts_at)) {
+            return response('Your reservation\'s end time must be after its start time.', 422);
+        }
+
         /** Validate existence of related entities. */
         $guest = Guest::find($request->input('guest_id'));
         $space = Space::find($request->input('space_id'));
@@ -171,55 +238,89 @@ class ReservationController extends Controller
             return response('That space does not belong to your group.', 401);
         }
 
-        /** Validate that no existing reservations exist for that space or guest. */
-        $starts_at = Carbon\Carbon::createFromDate($request->input('starts_at'));
-        $ends_at = Carbon\Carbon::createFromDate($request->input('ends_at'));
-
         $guestReservations = Reservation::where('guest_id', $guest->id)
-            ->where([
-                ['starts_at', '<=', $starts_at],
-                ['ends_at', '>=', $starts_at]
-            ])
-            ->orWhere([
-                ['starts_at', '<=', $ends_at],
-                ['ends_at', '>=', $ends_at]
-            ])
-            ->orWhere('starts_at', $starts_at)
-            ->orWhere('ends_at', $starts_at)
-            ->orWhere('starts_at', $ends_at)
-            ->orWhere('ends_at', $ends_at)
             ->where('id', '!=', $reservation->id)
+            ->where(function($query) use ($starts_at, $ends_at) {
+                /**
+                 * If the submitted start time is between existing reservation times.
+                 */
+                $query->where([
+                    ['starts_at', '<=', $starts_at],
+                    ['ends_at', '>=', $starts_at]
+                ])
+                    /**
+                     * If the submitted end time is between existing reservation times.
+                     */
+                    ->orWhere([
+                        ['starts_at', '<=', $ends_at],
+                        ['ends_at', '>=', $ends_at]
+                    ])
+                    /**
+                     * If any existing reservation start times fall between the submitted start and end times.
+                     */
+                    ->orWhereBetween('starts_at', [$starts_at, $ends_at ])
+                    /**
+                     * If any existing reservation end times fall between the submitted start and end times.
+                     */
+                    ->orWhereBetween('ends_at', [$starts_at, $ends_at ])
+                    /**
+                     * If any starting or end times are exactly the same.
+                     */
+                    ->orWhere('starts_at', $starts_at)
+                    ->orWhere('ends_at', $starts_at)
+                    ->orWhere('starts_at', $ends_at)
+                    ->orWhere('ends_at', $ends_at);
+            })
             ->get();
 
         if (!! $guestReservations->count()) {
-            return response('That guest has already had a reservation for that time.', 422);
+            return response('That guest already has a reservation for that time.', 422);
         }
 
         $spaceReservations = Reservation::where('space_id', $space->id)
-            ->where([
-                ['starts_at', '<=', $starts_at],
-                ['ends_at', '>=', $starts_at]
-            ])
-            ->orWhere([
-                ['starts_at', '<=', $ends_at],
-                ['ends_at', '>=', $ends_at]
-            ])
-            ->orWhere('starts_at', $starts_at)
-            ->orWhere('ends_at', $starts_at)
-            ->orWhere('starts_at', $ends_at)
-            ->orWhere('ends_at', $ends_at)
             ->where('id', '!=', $reservation->id)
+            ->where(function($query) use ($starts_at, $ends_at) {
+                /**
+                 * If the submitted start time is between existing reservation times.
+                 */
+                $query->where([
+                    ['starts_at', '<=', $starts_at],
+                    ['ends_at', '>=', $starts_at]
+                ])
+                    /**
+                     * If the submitted end time is between existing reservation times.
+                     */
+                    ->orWhere([
+                        ['starts_at', '<=', $ends_at],
+                        ['ends_at', '>=', $ends_at]
+                    ])
+                    /**
+                     * If any existing reservation start times fall between the submitted start and end times.
+                     */
+                    ->orWhereBetween('starts_at', [$starts_at, $ends_at ])
+                    /**
+                     * If any existing reservation end times fall between the submitted start and end times.
+                     */
+                    ->orWhereBetween('ends_at', [$starts_at, $ends_at ])
+                    /**
+                     * If any starting or end times are exactly the same.
+                     */
+                    ->orWhere('starts_at', $starts_at)
+                    ->orWhere('ends_at', $starts_at)
+                    ->orWhere('starts_at', $ends_at)
+                    ->orWhere('ends_at', $ends_at);
+            })
             ->get();
 
-        if ($spaceReservations >= $space->capacity) {
+        if ($spaceReservations->count() >= $space->capacity) {
             return response('That space has already reached its capacity for that time period.', 422);
         }
 
         $reservation->guest_id = $guest->id;
         $reservation->space_id = $space->id;
         $reservation->group_id = $request->user()->group_id;
-        $reservation->starts_at = $starts_at;
-        $reservation->ends_at = $ends_at;
+        $reservation->starts_at = $starts_at->toDateString();
+        $reservation->ends_at = $ends_at->toDateString();
         $reservation->notes = $request->input('notes');
 
         $reservation->save();
@@ -247,6 +348,6 @@ class ReservationController extends Controller
 
         $reservation->delete();
 
-        return response('Reservation deleted', 200);
+        return response('Reservation deleted.', 200);
     }
 }
