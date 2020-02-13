@@ -22,16 +22,15 @@ class GuestFactoryTest extends TestCase
     }
 
     /** @test */
-    public function has_name()
+    public function has_first_name()
     {
-        $this->assertIsString($this->guest->name);
+        $this->assertIsString($this->guest->first);
     }
 
     /** @test */
-    public function has_invitation()
+    public function has_last_name()
     {
-        $this->assertIsInt($this->guest->invitation_id);
-        $this->assertTrue(!!Invitation::find($this->guest->invitation_id));
+        $this->assertIsString($this->guest->last);
     }
 
     /** @test */
@@ -42,9 +41,36 @@ class GuestFactoryTest extends TestCase
     }
 
     /** @test */
+    public function has_address_components()
+    {
+        $this->assertIsString($this->guest->address);
+        $this->assertIsString($this->guest->city);
+        $this->assertIsString($this->guest->state);
+        $this->assertIsString($this->guest->zip);
+    }
+
+    /** @test */
     public function has_arrival_method()
     {
-        $this->assertIsString($this->guest->arrMethod);
+        $this->assertIsString($this->guest->arrivalMethod);
+    }
+
+    /** @test */
+    public function has_arrival_time()
+    {
+        $this->assertTrue(!! $this->guest->arrivalTime);
+    }
+
+    /** @test */
+    public function has_departure_method()
+    {
+        $this->assertIsString($this->guest->departureMethod);
+    }
+
+    /** @test */
+    public function has_departure_time()
+    {
+        $this->assertTrue(!! $this->guest->departureTime);
     }
 
     /** @test */

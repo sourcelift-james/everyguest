@@ -11,7 +11,7 @@ $factory->define(Invitation::class, function (Faker $faker) {
     return [
         'group_id' => factory(Group::class),
         'creator_id' => factory(User::class),
-        'name' => $faker->words(5),
+        'name' => $faker->words(5, true),
         'token' => Str::random(20)
     ];
 });

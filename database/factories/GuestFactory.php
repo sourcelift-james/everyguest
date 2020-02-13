@@ -10,7 +10,6 @@ use Faker\Generator as Faker;
 $factory->define(Guest::class, function (Faker $faker) {
     return [
         'group_id' => factory(Group::class),
-        'invitation_id' => factory(Invitation::class),
         'first' => $faker->firstName,
         'last' => $faker->lastName,
         'phone' => $faker->phoneNumber,
@@ -26,6 +25,7 @@ $factory->define(Guest::class, function (Faker $faker) {
         'departureMethod' => $faker->randomElement([
            'Flight', 'Rented or Owned Vehicle'
         ]),
+        'departureTime' => $faker->dateTimeThisMonth(),
         'notes' => $faker->sentences(3, true)
     ];
 });

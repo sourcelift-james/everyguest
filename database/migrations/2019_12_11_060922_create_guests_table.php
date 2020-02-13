@@ -28,7 +28,7 @@ class CreateGuestsTable extends Migration
 			$table->timestamp('arrivalTime');
 			$table->string('departureMethod');
 			$table->timestamp('departureTime');
-			$table->json('details')->default('[]');
+			$table->json('details')->nullable();
 			$table->string('notes')->nullable();
             $table->timestamps();
         });
