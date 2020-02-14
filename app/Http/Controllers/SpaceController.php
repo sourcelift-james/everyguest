@@ -69,17 +69,11 @@ class SpaceController extends Controller
     /**
      * Fetch space details.
      * @param Request $request
-     * @param int $space_id
+     * @param Space $space
      * @return Response
      */
-    public function show(Request $request, int $space_id)
+    public function show(Request $request, Space $space)
     {
-        /** Reject if space does not exist. */
-        $space = Space::find($space_id);
-
-        if (! $space) {
-            return response('Space not found.', 404);
-        }
 
         /** Reject if user's group does not match space's. */
         if ($space->group_id != $request->user()->group_id) {
@@ -93,23 +87,16 @@ class SpaceController extends Controller
     /**
      * Update space details.
      * @param Request $request
-     * @param int $space_id
+     * @param Space $space
      * @return Response
      */
-    public function update(Request $request, int $space_id)
+    public function update(Request $request, Space $space)
     {
         /** Validate form input. */
         $this->validate($request, [
             'name' => 'required|max:40',
             'capacity' => 'required|integer'
         ]);
-
-        /** Reject if space does not exist. */
-        $space = Space::find($space_id);
-
-        if (! $space) {
-            return response('Space not found.', 404);
-        }
 
         /** Reject if user's group does not match space's. */
         if ($request->user()->group_id != $space->group_id) {
@@ -138,14 +125,8 @@ class SpaceController extends Controller
      * @param int $space_id
      * @return Response
      */
-    public function delete(Request $request, int $space_id)
+    public function delete(Request $request, Space $space)
     {
-        /** Reject if space does not exist. */
-        $space = Space::find($space_id);
-
-        if (! $space) {
-            return response('Space not found.', 404);
-        }
 
         /** Reject if user's group does not match space's. */
         if ($request->user()->group_id != $space->group_id) {
@@ -154,7 +135,7 @@ class SpaceController extends Controller
 
         /** Reject if user is not owner of group. */
         if ($space->group()->first()->owner_id != $request->user()->id) {
-            return response('Only group owners may delete spaces..', 401);
+            return response('Only group owners may delete spaces.', 401);
         }
 
         /** Delete space. */

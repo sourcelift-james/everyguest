@@ -4,6 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use App\Models\Group;
+use App\Models\Guest;
+use App\Models\Invitation;
+use App\Models\Reservation;
+use App\Models\Space;
+use App\Models\User;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -26,6 +32,13 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        Route::bind('group', Group::class);
+        Route::bind('guest', Guest::class);
+        Route::bind('invitation', Invitation::class);
+        Route::bind('reservation', Reservation::class);
+        Route::bind('space', Space::class);
+        Route::bind('user', User::class);
     }
 
     /**

@@ -50,18 +50,13 @@ class GroupController extends Controller
      * Fetch group details.
      *
      * @param Request $request
-     * @param int $id
+     * @param Group $group
      * @return Response
      */
-	public function show(Request $request, int $id) {
-		$group = Group::find($id);
-
-		if (!$group) {
-			return response('No group found.', 422);
-		}
+	public function show(Request $request, Group $group) {
 
 		if ($group->id != $request->user()->id) {
-			return response('User does not belong to group.', 422);
+			return response('User not found.', 404);
 		}
 
 		return $group;
@@ -71,18 +66,13 @@ class GroupController extends Controller
      * Fetch group members.
      *
      * @param Request $request
-     * @param int $id
+     * @param Group $group
      * @return Response
      */
-	public function members(Request $request, int $id) {
-		$group = Group::find($id);
-
-		if (!$group) {
-			return response ('No group found.', 422);
-		}
+	public function members(Request $request, Group $group) {
 
 		if ($group->id != $request->user()->group_id) {
-			return response('User does not belong to group.', 422);
+			return response('No members found.', 404);
 		}
 
 		return User::where('group_id', $group->id)->get();
@@ -91,34 +81,21 @@ class GroupController extends Controller
     /**
      * Fetch specific group member details.
      * @param Request $request
-     * @param int $group_id
-     * @param int $member_id
+     * @param Group $group
+     * @param User $member
      * @return Response
      */
-	public function member(Request $request, int $group_id, int $member_id)
+	public function member(Request $request, Group $group, User $member)
     {
-        /** Make sure group exists. */
-        $group = Group::find($group_id);
-
-        if (! $group) {
-            return response('No group found.', 422);
-        }
 
         /** Make sure requesting user belongs to group. */
         if ($group->id != $request->user()->group_id) {
-            return response('Logged in user does not belong to that group.', 422);
-        }
-
-        /** Make sure requested user exists. */
-        $member = User::find($member_id);
-
-        if (! $member) {
-            return response('Selected member does not exist.', 422);
+            return response('Group not found.', 404);
         }
 
         /** Make sure requested member belongs to group. */
         if ($member->group_id != $group->id) {
-            return response('Selected member does not belong to selected group.', 422);
+            return response('Member not found.', 404);
         }
 
         /** Return requested member. */
@@ -128,27 +105,16 @@ class GroupController extends Controller
     /**
      * Update group details.
      * @param Request $request
-     * @param int $group_id
+     * @param Group $group
      * @return Response
      */
-    public function update(Request $request, int $group_id)
+    public function update(Request $request, Group $group)
     {
         /** Validate submission data. */
         $this->validate($request, [
             'name' => 'required|max:40',
             'owner' => 'required|integer'
         ]);
-
-        /**
-         * Find group.
-         * @var Group $group
-         */
-        $group = Group::find($group_id);
-
-        /** Reject if no group is found. */
-        if (! $group) {
-            return response('Group not found', 422);
-        }
 
         /** Reject if user is not owner of group. */
         if ($group->owner_id != $request->user()->id) {
@@ -189,27 +155,22 @@ class GroupController extends Controller
         $group->owner_id = $request->input('owner');
 
         $group->save();
+
+        return response('Group details updated.', 200);
     }
 
     /**
      * Invite new member to group.
      * @param Request $request
-     * @param int $group_id
+     * @param Group $group
      * @return Response
      */
-    public function invite(Request $request, int $group_id)
+    public function invite(Request $request, Group $group)
     {
         /** Validate input. */
         $this->validate($request, [
            'email' => 'required|email'
         ]);
-
-        /** Make sure group exists. */
-        $group = Group::find($group_id);
-
-        if (! $group) {
-            return response('Group does not exist.', 422);
-        }
 
         /** Make sure user is owner of group. */
         if ($request->user()->id != $group->owner_id) {
@@ -240,34 +201,26 @@ class GroupController extends Controller
     /**
      * Remove user from group.
      * @param Request $request
-     * @param int $group_id
-     * @param int $member_id
+     * @param Group $group
+     * @param User $member
      * @return Response
      */
-    public function dismissMember(Request $request, int $group_id, int $member_id)
+    public function remove(Request $request, Group $group, User $member)
     {
-        /** Check if group exists. */
-        $group = Group::find($group_id);
-
-        if (! $group) {
-            return response('Group does not exist.', 422);
-        }
 
         /** Check if user is owner. */
         if ($group->owner_id != $request->user()->id) {
             return response('Unauthorized access.', 401);
         }
 
-        /** Check if member exists. */
-        $member = User::find($member_id);
-
-        if (! $member) {
-            return response('Member does not exist.', 422);
-        }
-
         /** Check if member belongs to owner's group. */
         if ($member->group_id != $group->id) {
-            return response('That user is not in your group.', 422);
+            return response('User not found.', 422);
+        }
+
+        /** Don't allow a user to remove themselves from their own group. */
+        if ($member->id == $request->user()->id) {
+            return response('You can not remove yourself from your own group.', 422);
         }
 
         /** Remove member from group. */

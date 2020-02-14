@@ -38,43 +38,37 @@ Route::group(['middleware' => ['auth:api']], function() {
      * Fetch group details.
      * TESTED.
      */
-	Route::get('group/{id}', 'GroupController@show')
-        ->where('id', '[0-9]+');
+	Route::get('group/{group}', 'GroupController@show');
 
     /**
      * Fetch group members.
      * TESTED.
      */
-	Route::get('group/{id}/members', 'GroupController@members')
-        ->where('id', '[0-9]+');
+	Route::get('group/{group}/members', 'GroupController@members');
 
     /**
      * Fetch group member details.
      * TESTED.
      */
-    Route::get('group/{group_id}/members/{member_id}', 'GroupController@member')
-        ->where('group_id', '[0-9]+')
-        ->where('member_id', '[0-9]+');
+    Route::get('group/{group}/members/{user}', 'GroupController@member');
 
 	/**
      * Update group details.
      * TESTED.
      */
-	Route::post('group/{id}/update', 'GroupController@update')
-        ->where('id', '[0-9]+');
+	Route::post('group/{group}/update', 'GroupController@update');
 
 	/**
      * Invite new member.
      * TESTED.
      */
-	Route::post('group/{id}/invite', 'GroupController@invite')
-	    ->where('id', '[0-9]+');
+	Route::post('group/{group}/invite', 'GroupController@invite');
 
 	/**
      * Remove existing member.
      * TESTED.
      */
-	Route::post('group/{group_id}/members/{member_id}/remove', 'GroupController@dismissMember')
+	Route::post('group/{group}/members/{user}/remove', 'GroupController@remove')
         ->where('group_id', '[0-9]+')
 	    ->where('member_id', '[0-9]+');
 
@@ -97,22 +91,19 @@ Route::group(['middleware' => ['auth:api']], function() {
      * Fetch space details.
      * TESTED.
      */
-    Route::get('spaces/{space_id}', 'SpaceController@show')
-        ->where('space_id', '[0-9]+');
+    Route::get('spaces/{space}', 'SpaceController@show');
 
     /**
      * Update space details.
      * TESTED.
      */
-    Route::post('spaces/{space_id}/update', 'SpaceController@update')
-        ->where('space_id', '[0-9]+');
+    Route::post('spaces/{space}/update', 'SpaceController@update');
 
     /**
      * Delete space.
      * TESTED.
      */
-    Route::post('spaces/{space_id}/delete', 'SpaceController@delete')
-        ->where('space_id', '[0-9]+');
+    Route::post('spaces/{space}/delete', 'SpaceController@delete');
 
     /** Invitation Routes */
 
@@ -132,28 +123,19 @@ Route::group(['middleware' => ['auth:api']], function() {
      * View invitation properties and fields.
      * WRITTEN.
      */
-    Route::get('invitations/{invitation_id}', 'InvitationController@show')
-        ->where('invitation_id', '[0-9]+');
+    Route::get('invitations/{invitation}', 'InvitationController@show');
 
     /**
      * Update invitation properties.
      * WRITTEN.
      */
-    Route::post('invitations/{invitation_id}/update', 'InvitationController@update')
-        ->where('invitation_id', '[0-9]+');
+    Route::post('invitations/{invitation}/update', 'InvitationController@update');
 
     /**
      * Delete invitation.
      * WRITTEN.
      */
-    Route::post('invitations/{invitation_id}', 'InvitationController@delete')
-        ->where('invitation_id', '[0-9]+');
-
-    /**
-     * Submitted invitation form for new guests.
-     * WRITTEN.
-     */
-    Route::get('welcome/{invitation_token}', 'InvitationController@display');
+    Route::post('invitations/{invitation}', 'InvitationController@delete');
 
     /** Reservation Routes */
 
@@ -167,8 +149,7 @@ Route::group(['middleware' => ['auth:api']], function() {
      * View a single reservation.
      * TESTED.
      */
-    Route::get('reservations/{reservation_id}', 'ReservationController@show')
-        ->where('reservation_id', '[0-9]+');
+    Route::get('reservations/{reservation}', 'ReservationController@show');
 
     /**
      * Create a reservation.
@@ -180,15 +161,13 @@ Route::group(['middleware' => ['auth:api']], function() {
      * Update a reservation.
      * TESTED.
      */
-    Route::post('reservations/{reservation_id}/update', 'ReservationController@update')
-        ->where('reservation_id', '[0-9]+');
+    Route::post('reservations/{reservation}/update', 'ReservationController@update');
 
     /**
      * Delete a reservation.
      * TESTED.
      */
-    Route::post('reservations/{reservation_id}/delete', 'ReservationController@delete')
-        ->where('reservation_id', '[0-9]+');
+    Route::post('reservations/{reservation}/delete', 'ReservationController@delete');
 });
 
 /**

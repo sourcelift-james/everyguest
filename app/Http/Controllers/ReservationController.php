@@ -23,19 +23,13 @@ class ReservationController extends Controller
     /**
      * Return a single reservation.
      * @param Request $request
-     * @param int $reservation_id
+     * @param Reservation $reservation
      * @return Response
      */
-    public function show(Request $request, int $reservation_id)
+    public function show(Request $request, Reservation $reservation)
     {
-        $reservation = Reservation::find($reservation_id);
-
-        if (! $reservation) {
-            return response('Reservation not found.', 404);
-        }
-
         if ($reservation->group_id != $request->user()->group_id) {
-            return response('You do not have access to that reservation.', 401);
+            return response('Unauthorized access.', 401);
         }
 
         return $reservation;
@@ -183,17 +177,11 @@ class ReservationController extends Controller
     /**
      * Update reservation details.
      * @param Request $request
-     * @param int $reservation_id
+     * @param Reservation $reservation
      * @return Response
      */
-    public function update(Request $request, int $reservation_id)
+    public function update(Request $request, Reservation $reservation)
     {
-        $reservation = Reservation::find($reservation_id);
-
-        if (! $reservation) {
-            return response('Reservation not found.', 404);
-        }
-
         $this->validate($request, [
             'guest_id' => 'required|int',
             'space_id' => 'required|int',
@@ -331,16 +319,11 @@ class ReservationController extends Controller
     /**
      * Delete a reservation.
      * @param Request $request
-     * @param int $reservation_id
+     * @param Reservation $reservation
      * @return Response
      */
-    public function delete(Request $request, int $reservation_id)
+    public function delete(Request $request, Reservation $reservation)
     {
-        $reservation = Reservation::find($reservation_id);
-
-        if (! $reservation) {
-            return response('Reservation not found.', 404);
-        }
 
         if ($reservation->group_id != $request->user()->group_id) {
             return response('You do not have access to that reservation.', 401);

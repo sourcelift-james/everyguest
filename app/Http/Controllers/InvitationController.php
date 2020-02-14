@@ -56,21 +56,13 @@ class InvitationController extends Controller
     /**
      * View invitation properties and fields.
      * @param Request $request
-     * @param int $invitation_id
+     * @param Invitation $invitation
      * @return Response
      */
-    public function show(Request $request, int $invitation_id)
+    public function show(Request $request, Invitation $invitation)
     {
-        /** Check if user belongs to a group. */
-        if (! $request->user()->group_id) {
-            return response('You must join or create a group to create invitations.', 401);
-        }
-
-        /** Make sure invitation exists. */
-        $invitation = Invitation::find($invitation_id);
-
-        if (! $invitation) {
-            return response('Invitation not found.', 404);
+        if ($invitation->group_id != $request->user()->group_id) {
+            return respnse('Unauthorized access.', 401);
         }
 
         return $invitation;
@@ -79,21 +71,18 @@ class InvitationController extends Controller
     /**
      * Update invitation properties.
      * @param Request $request
-     * @param int $invitation_id
+     * @param Invitation $invitation
      * @return Response
      */
-    public function update(Request $request, int $invitation_id)
+    public function update(Request $request, Invitation $invitation)
     {
         /** Check if user belongs to a group. */
         if (! $request->user()->group_id) {
             return response('You must join or create a group to create invitations.', 401);
         }
 
-        /** Make sure invitation exists. */
-        $invitation = Invitation::find($invitation_id);
-
-        if (! $invitation) {
-            return response('Invitation not found.', 404);
+        if ($invitation->group_id != $request->user()->group_id) {
+            return response('Unauthorized access.', 401);
         }
 
         $submittedDetails = $request->input('details');
@@ -112,26 +101,21 @@ class InvitationController extends Controller
         $invitation->details = $invitationDetails;
 
         $invitation->save();
+
+        return response('Invitation updated.', 200);
     }
 
     /**
      * Delete an invitation.
      * @param Request $request
-     * @param int $invitation_id
+     * @param Invitation $invitation
      * @return Response
      */
-    public function delete(Request $request, int $invitation_id)
+    public function delete(Request $request, Invitation $invitation)
     {
-        /** Check if user belongs to a group. */
-        if (! $request->user()->group_id) {
-            return response('You must join or create a group to create invitations.', 401);
-        }
 
-        /** Make sure invitation exists. */
-        $invitation = Invitation::find($invitation_id);
-
-        if (! $invitation) {
-            return response('Invitation not found.', 404);
+        if ($invitation->group_id != $request->user()->group_id) {
+            return response('Unauthorized access.', 401);
         }
 
         $invitation->delete();
