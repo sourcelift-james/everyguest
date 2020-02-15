@@ -168,7 +168,40 @@ Route::group(['middleware' => ['auth:api']], function() {
      * TESTED.
      */
     Route::post('reservations/{reservation}/delete', 'ReservationController@delete');
+
+    /** Guest Routes */
+
+    /**
+     * List your group's guests.
+     * WRITTEN.
+     */
+    Route::get('guests', 'GuestController@index');
+
+    /**
+     * Show a specific guest's details.
+     * WRITTEN.
+     */
+    Route::get('guests/{guest}', 'GuestController@show');
+
+    /**
+     * Create a guest.
+     * WRITTEN.
+     */
+    Route::post('guests/create', 'GuestController@create');
+
+    /**
+     * Update a guest.
+     * WRITTEN.
+     */
+    Route::post('guests/{guest}/update', 'GuestController@update');
+
+    /**
+     * Delete a guest.
+     * WRITTEN.
+     */
+    Route::post('guests/{guest}/delete', 'GuestController@delete');
 });
+
 
 /**
  * Submitted invitation form for new guests.
