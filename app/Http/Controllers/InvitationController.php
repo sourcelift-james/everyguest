@@ -17,11 +17,6 @@ class InvitationController extends Controller
      */
     public function index(Request $request)
     {
-        /** Check if user belongs to a group. */
-        if (! $request->user()->group_id) {
-            return response('You must join or create a group to create invitations.', 401);
-        }
-
         return Invitation::where('group_id', $request->user()->group_id)->get();
     }
 
@@ -32,18 +27,13 @@ class InvitationController extends Controller
      */
     public function create(Request $request)
     {
-        /** Check if user belongs to a group. */
-        if (! $request->user()->group_id) {
-            return response('You must join or create a group to create invitations.', 401);
-        }
-
         /** Validate name input. */
         $this->validate($request, [
-           'name' => 'required',
+            'name' => 'required',
             'expiration' => 'date',
         ]);
 
-        $invitation = Invitation::create([
+        Invitation::create([
             'group_id' => $request->user()->group_id,
             'name' => $request->input('name'),
             'creator_id' => $request->user()->id,
@@ -62,7 +52,7 @@ class InvitationController extends Controller
     public function show(Request $request, Invitation $invitation)
     {
         if ($invitation->group_id != $request->user()->group_id) {
-            return respnse('Unauthorized access.', 401);
+            return response('Unauthorized access.', 401);
         }
 
         return $invitation;
@@ -76,11 +66,6 @@ class InvitationController extends Controller
      */
     public function update(Request $request, Invitation $invitation)
     {
-        /** Check if user belongs to a group. */
-        if (! $request->user()->group_id) {
-            return response('You must join or create a group to create invitations.', 401);
-        }
-
         if ($invitation->group_id != $request->user()->group_id) {
             return response('Unauthorized access.', 401);
         }
@@ -94,6 +79,7 @@ class InvitationController extends Controller
             $invitationDetails[$name] = [
                 'label' => $detail['label'],
                 'type' => $detail['type'],
+                'options' => ($detail['type'] == 'select') ? $detail['options'] : null,
                 'validation' => ($detail['required']) ? 'required' : ''
             ];
         }
@@ -121,7 +107,6 @@ class InvitationController extends Controller
         $invitation->delete();
 
         return response('Invitation deleted.', 200);
-
     }
 
     /**
@@ -133,7 +118,7 @@ class InvitationController extends Controller
     public function display(Request $request, string $invitation_token)
     {
         /** Make sure invitation exists. */
-        $invitation = Invitation::where('token', $invitation_token)->first;
+        $invitation = Invitation::where('token', $invitation_token)->first();
 
         if (! $invitation) {
             return response('Invitation not found.', 404);
@@ -202,15 +187,15 @@ class InvitationController extends Controller
         }
 
         /** Start building the guest object with all the base and added details */
-        $baseKeys = Guest::baseKeys;
-
-        $guestDetails = $request->only($baseKeys);
+        $guestDetails = $request->only(Guest::$baseKeys);
 
         $guestDetails['group_id'] = $invitation->group_id;
 
-        $guestDetails['details'] = $details;
+        $guest = Guest::create($guestDetails);
 
-        Guest::create($guestDetails);
+        $guest->details = $details;
+
+        $guest->save();
 
         return response('Thank you for submitting your information.', 200);
     }
