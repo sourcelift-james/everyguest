@@ -33,12 +33,12 @@ class RouteServiceProvider extends ServiceProvider
 
         parent::boot();
 
-        Route::bind('group', Group::class);
-        Route::bind('guest', Guest::class);
-        Route::bind('invitation', Invitation::class);
-        Route::bind('reservation', Reservation::class);
-        Route::bind('space', Space::class);
-        Route::bind('user', User::class);
+        Route::model('group', Group::class);
+        Route::model('guest', Guest::class);
+        Route::model('invitation', Invitation::class);
+        Route::model('reservation', Reservation::class);
+        Route::model('space', Space::class);
+        Route::model('user', User::class);
     }
 
     /**
