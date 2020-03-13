@@ -72,7 +72,7 @@ class GroupController extends Controller
 	public function members(Request $request, Group $group) {
 
 		if ($group->id != $request->user()->group_id) {
-			return response('No members found.', 404);
+			return response('Group not found.', 404);
 		}
 
 		return User::where('group_id', $group->id)->get();
@@ -87,15 +87,14 @@ class GroupController extends Controller
      */
 	public function member(Request $request, Group $group, User $member)
     {
-
-        /** Make sure requesting user belongs to group. */
-        if ($group->id != $request->user()->group_id) {
-            return response('Group not found.', 404);
-        }
-
         /** Make sure requested member belongs to group. */
         if ($member->group_id != $group->id) {
-            return response('Member not found.', 404);
+            return response('User not found.', 404);
+        }
+
+        /** If user does not belong to group. */
+        if ($request->user()->group_id != $group->id) {
+            return response('Unauthorized access.', 401);
         }
 
         /** Return requested member. */
@@ -207,7 +206,6 @@ class GroupController extends Controller
      */
     public function remove(Request $request, Group $group, User $member)
     {
-
         /** Check if user is owner. */
         if ($group->owner_id != $request->user()->id) {
             return response('Unauthorized access.', 401);
@@ -215,7 +213,7 @@ class GroupController extends Controller
 
         /** Check if member belongs to owner's group. */
         if ($member->group_id != $group->id) {
-            return response('User not found.', 422);
+            return response('User not found.', 404);
         }
 
         /** Don't allow a user to remove themselves from their own group. */
