@@ -132,6 +132,11 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::post('invitations/{invitation}/update', 'InvitationController@update');
 
     /**
+     * Delete an invitation.
+     */
+    Route::post('invitations/{invitation}/delete', 'InvitationController@delete');
+
+    /**
      * Delete invitation.
      * WRITTEN.
      */
@@ -202,6 +207,11 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::post('guests/{guest}/delete', 'GuestController@delete');
 });
 
+/**
+ * Display invitation form for new guests.
+ * WRITTEN.
+ */
+Route::get('welcome/{invitation_token}', 'InvitationController@display');
 
 /**
  * Submitted invitation form for new guests.
