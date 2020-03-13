@@ -24,7 +24,7 @@ class GroupMemberActions extends TestCase
             'owner_id' => $this->owner->id
         ]);
 
-        $this->member = factory(User::class)->create([
+        $this->member = factory(User::class)->states('member')->create([
             'group_id' => $this->group->id
         ]);
 
@@ -52,20 +52,24 @@ class GroupMemberActions extends TestCase
         $response = $this->actingAs($this->owner, 'api')
             ->json('GET', '/api/group/' . 1600 . '/members/' . $this->member->id);
 
-        $response->assertStatus(422);
-
-        $response->assertSee('No group found');
+        $response->assertStatus(404);
     }
 
     /** @test */
     public function rejects_if_user_does_not_belong_to_group()
     {
+        $newGroup = factory(Group::class)->create();
+
+        $newMember = factory(User::Class)->states('member')->create([
+            'group_id' => $newGroup->id
+        ]);
+
         $response = $this->actingAs($this->owner, 'api')
-            ->json('GET', '/api/group/' . 1600 . '/members/' . $this->member->id);
+            ->json('GET', '/api/group/' . $newGroup->id . '/members/' . $newMember->id);
 
-        $response->assertStatus(422);
+        $response->assertStatus(401);
 
-        $response->assertSee('No group found');
+        $response->assertSee('Unauthorized access.');
     }
 
     /** @test */
@@ -74,9 +78,7 @@ class GroupMemberActions extends TestCase
         $response = $this->actingAs($this->owner, 'api')
             ->json('GET', '/api/group/' . $this->group->id . '/members/' . 1600);
 
-        $response->assertStatus(422);
-
-        $response->assertSee('Selected member does not exist.');
+        $response->assertStatus(404);
     }
 
     /** @test */
@@ -87,9 +89,9 @@ class GroupMemberActions extends TestCase
         $response = $this->actingAs($this->owner, 'api')
             ->json('GET', '/api/group/' . $this->group->id . '/members/' . $nonMember->id);
 
-        $response->assertStatus(422);
+        $response->assertStatus(404);
 
-        $response->assertSee('Selected member does not belong to selected group.');
+        $response->assertSee('User not found.');
     }
 
     /** @test */
@@ -111,8 +113,7 @@ class GroupMemberActions extends TestCase
         $response = $this->actingAs($this->owner, 'api')
             ->json('POST', '/api/group/' . 1600 . '/members/' . $this->member->id . '/remove');
 
-        $response->assertStatus(422);
-        $response->assertSee('Group does not exist.');
+        $response->assertStatus(404);
     }
 
     /** @test */
@@ -133,8 +134,7 @@ class GroupMemberActions extends TestCase
         $response = $this->actingAs($this->owner, 'api')
             ->json('POST', '/api/group/' . $this->group->id . '/members/' . 1600 . '/remove');
 
-        $response->assertStatus(422);
-        $response->assertSee('Member does not exist.');
+        $response->assertStatus(404);
     }
 
     /** @test */
@@ -145,7 +145,7 @@ class GroupMemberActions extends TestCase
         $response = $this->actingAs($this->owner, 'api')
             ->json('POST', '/api/group/' . $this->group->id . '/members/' . $nonMember->id . '/remove');
 
-        $response->assertStatus(422);
-        $response->assertSee('That user is not in your group.');
+        $response->assertStatus(404);
+        $response->assertSee('User not found.');
     }
 }

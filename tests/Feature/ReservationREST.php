@@ -97,8 +97,6 @@ class ReservationREST extends TestCase
             ->json('GET', '/api/reservations/' . 1600);
 
         $response->assertStatus(404);
-
-        $response->assertSee('Reservation not found.');
     }
 
     /** @test */
@@ -116,7 +114,7 @@ class ReservationREST extends TestCase
 
         $response->assertStatus(401);
 
-        $response->assertSee('You do not have access to that reservation.');
+        $response->assertSee('Unauthorized access.');
     }
 
     /** @test */
@@ -784,8 +782,6 @@ class ReservationREST extends TestCase
             ->json('POST', '/api/reservations/' . 1600 . '/delete');
 
         $response->assertStatus(404);
-
-        $response->assertSee('Reservation not found.');
     }
 
     /** @test */

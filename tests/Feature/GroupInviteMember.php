@@ -86,8 +86,7 @@ class GroupInviteMember extends TestCase
                 'email' => $this->invited->email
             ]);
 
-        $response->assertStatus(422);
-        $response->assertSee('Group does not exist.');
+        $response->assertStatus(404);
     }
 
     /** @test */

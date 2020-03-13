@@ -78,8 +78,7 @@ class UpdateGroupDetails extends TestCase
                 'owner' => $this->owner->id
             ]);
 
-        $response->assertStatus(422);
-        $response->assertSee('Group not found');
+        $response->assertStatus(404);
     }
 
     /** @test */

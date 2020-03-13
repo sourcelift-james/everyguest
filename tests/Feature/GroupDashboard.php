@@ -45,8 +45,7 @@ class GroupDashboard extends TestCase
         $response = $this->actingAs($user, 'api')
             ->json('GET', '/api/group/' . 1600);
 
-        $response->assertStatus(422);
-        $response->assertSee('No group found.');
+        $response->assertStatus(404);
     }
 
     /**
@@ -60,8 +59,7 @@ class GroupDashboard extends TestCase
         $response = $this->actingAs($user, 'api')
             ->json('GET', '/api/group/' . $this->group->id);
 
-        $response->assertStatus(422);
-        $response->assertSee('User does not belong to group.');
+        $response->assertStatus(404);
     }
 
     /**
@@ -98,9 +96,7 @@ class GroupDashboard extends TestCase
         $response = $this->actingAs($user, 'api')
             ->json('GET', '/api/group/' . 1600 . '/members');
 
-        $response->assertStatus(422);
-
-        $response->assertSee('No group found.');
+        $response->assertStatus(404);
     }
 
     /**
@@ -116,8 +112,8 @@ class GroupDashboard extends TestCase
         $response = $this->actingAs($user, 'api')
             ->json('GET', '/api/group/' . $this->group->id . '/members');
 
-        $response->assertStatus(422);
+        $response->assertStatus(404);
 
-        $response->assertSee('User does not belong to group.');
+        $response->assertSee('Group not found.');
     }
 }

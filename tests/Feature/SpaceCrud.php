@@ -177,8 +177,6 @@ class SpaceCrud extends TestCase
             ->json('GET', '/api/spaces/' . 1600);
 
         $response->assertStatus(404);
-
-        $response->assertSee('Space not found.');
     }
 
     /** @test */
@@ -235,8 +233,6 @@ class SpaceCrud extends TestCase
             ]);
 
         $response->assertStatus(404);
-
-        $response->assertSee('Space not found.');
     }
 
     /** @test */
@@ -325,7 +321,6 @@ class SpaceCrud extends TestCase
             ->json('POST', '/api/spaces/' . 1600 . '/delete');
 
         $response->assertStatus(404);
-        $response->assertSee('Space not found.');
 
         $this->assertTrue(!! Space::find($this->space->id));
     }
