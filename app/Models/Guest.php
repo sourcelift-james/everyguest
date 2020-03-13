@@ -12,7 +12,7 @@ class Guest extends Model
      * Base keys for form submissions.
      * @var array
      */
-    public $baseKeys = [
+    public static $baseKeys = [
         'first', 'last', 'phone', 'email', 'address', 'city', 'state', 'zip', 'arrivalMethod', 'arrivalTime', 'departureMethod', 'departureTime'
     ];
 
@@ -52,4 +52,9 @@ class Guest extends Model
 	{
 		return $this->hasMany('App\Models\Reservation');
 	}
+
+	public function baseKeys()
+    {
+        return $this->baseKeys;
+    }
 }
