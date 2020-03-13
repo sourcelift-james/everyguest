@@ -12,6 +12,10 @@ class Invitation extends Model
 		'expired_at'
 	];
 
+	protected $casts = [
+	    'details' => 'array'
+    ];
+
 	protected $fillable = [
 		'group_id',
         'name',
