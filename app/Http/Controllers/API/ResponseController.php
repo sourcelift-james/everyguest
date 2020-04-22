@@ -6,7 +6,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
 use Illuminate\Support\Facades\Auth;
-use App\User;
+use App\Models\User;
 
 class ResponseController extends Controller
 {

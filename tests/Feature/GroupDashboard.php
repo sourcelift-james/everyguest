@@ -15,7 +15,12 @@ class GroupDashboard extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->owner = factory(User::class)->create();
         $this->group = factory(Group::class)->create();
+
+        $this->owner->group_id = $this->group->id;
+
+        $this->owner->save();
     }
 
     /**
@@ -24,7 +29,7 @@ class GroupDashboard extends TestCase
      */
     public function group_exists()
     {
-        $response = $this->actingAs($this->group->owner, 'api')
+        $response = $this->actingAs($this->owner, 'api')
             ->json('GET', '/api/group/' . $this->group->id);
 
         $response->assertOk();
@@ -59,7 +64,9 @@ class GroupDashboard extends TestCase
         $response = $this->actingAs($user, 'api')
             ->json('GET', '/api/group/' . $this->group->id);
 
-        $response->assertStatus(404);
+        $response->assertStatus(401);
+
+        $response->assertSee('Unauthorized access.');
     }
 
     /**
@@ -112,8 +119,8 @@ class GroupDashboard extends TestCase
         $response = $this->actingAs($user, 'api')
             ->json('GET', '/api/group/' . $this->group->id . '/members');
 
-        $response->assertStatus(404);
+        $response->assertStatus(401);
 
-        $response->assertSee('Group not found.');
+        $response->assertSee('Unauthorized access.');
     }
 }

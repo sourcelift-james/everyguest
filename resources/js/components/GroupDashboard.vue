@@ -1,12 +1,18 @@
 <template>
 	<div>
-		<h2 class="header" v-if="group">{{ group.name }}</h2>
+        <h2 class="header" v-if="group">{{ group.name }}</h2>
 		<h5 class="header">Members</h5>
 		<div class="ui bulleted list">
 			<div class="item" v-for="member in members">
 				{{ member.name }}
 			</div>
 		</div>
+        <router-link to="/group/manage" v-if="group.owner_id == user.id">
+            <button class="small ui labeled icon button">
+                <i class="cog icon"></i>
+                Manage
+            </button>
+        </router-link>
 	</div>
 </template>
 
@@ -20,7 +26,7 @@ export default {
 		}
 	},
 	mounted: function() {
-		axios.get('/api/getuser', { withCredentials: true }).
+		axios.get('/api/auth/getuser', { withCredentials: true }).
 		then(response => {
 			this.user = response.data;
 

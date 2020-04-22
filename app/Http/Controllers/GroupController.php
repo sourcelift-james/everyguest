@@ -55,8 +55,8 @@ class GroupController extends Controller
      */
 	public function show(Request $request, Group $group) {
 
-		if ($group->id != $request->user()->id) {
-			return response('User not found.', 404);
+		if ($group->id != $request->user()->group_id) {
+			return response('Group not found.', 402);
 		}
 
 		return $group;

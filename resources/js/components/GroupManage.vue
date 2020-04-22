@@ -2,19 +2,27 @@
 	<div>
 		<h2 class="header" v-if="group">Manage Group Details</h2>
 		<div class="ui divider"></div>
-		<form @submit.prevent="updateName">
-			<div class="ui labeled input">
-				<div class="ui label">Group Name</div>
-				<input name="name" type="text" v-model="name" required>
-			</div>
+		<form @submit.prevent="updateGroup" class="ui form">
+            <div class="field">
+                <label>Group Name</label>
+                <input name="name" type="text" v-model="name" required>
+            </div>
+            <div class="field">
+                <label>Group Owner</label>
+                <select name="owner" class="ui fluid dropdown" v-model="owner">
+                    <option v-for="member in members" v-bind:value="member.id">{{ member.name }}</option>
+                </select>
+            </div>
 			<button type="submit" class="ui primary button">Update Name</button>
 		</form>
-		<form @submit.prevent="inviteMember">
-			<div class="ui labeled input">
-				<div class="ui label">Invite Member by Email</div>
+        <div class="ui divider"></div>
+		<form @submit.prevent="inviteMember" class="ui form">
+			<div class="field">
+				<label>Invite Member by Email</label>
 				<input name="email" type="text" v-model="email" required>
 			</div>
 			<button type="submit" class="ui primary button">Invite Member</button>
+        </form>
 	</div>
 </template>
 
@@ -24,11 +32,14 @@ export default {
 		return {
 			user: '',
 			group: '',
-			name: ''
+            members: [],
+            owner: '',
+			name: '',
+            email: ''
 		}
 	},
 	mounted: function() {
-		axios.get('/api/getuser', { withCredentials: true }).
+		axios.get('/api/auth/getuser', { withCredentials: true }).
 		then(response => {
 			this.user = response.data;
 
@@ -47,14 +58,21 @@ export default {
 			}
 
 			this.group = response.data;
+			this.owner = this.group.owner_id;
 			this.name = this.group.name;
+
+            return axios.get('/api/group/' + this.group.id + '/members', { withCredentials: true });
+        }).
+        then(response => {
+            this.members = response.data;
 		}).
 		catch(this.$root.errorHandler);
 	},
 	methods: {
-		updateName() {
-			axios.post('/api/group/update', {
-				name: this.name
+		updateGroup() {
+			axios.post('/api/group/' + this.group.id + '/update', {
+				name: this.name,
+                owner: this.owner
 			},  { withCredentials: true }).
 			then(response => {
 				this.message = response.data;
@@ -62,7 +80,7 @@ export default {
 			catch(this.$root.errorHandler);
 		},
 		inviteMember() {
-			axios.post('/api/group/invite', {
+			axios.post('/api/group/' + this.group.id + '/invite', {
 				email: this.email
 			},  { withCredentials: true }).
 			then(response => {

@@ -30,7 +30,7 @@ export default {
 		}
 	},
 	mounted: function() {
-		axios.get('/api/getuser', { withCredentials: true }).
+		axios.get('/api/auth/getuser', { withCredentials: true }).
 		then(response => {
 			this.user = response.data;
 		}).

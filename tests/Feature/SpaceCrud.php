@@ -115,7 +115,7 @@ class SpaceCrud extends TestCase
 
         $response->assertStatus(401);
 
-        $response->assertSee('You must belong to a group to create a space.');
+        $response->assertSee('Unauthorized access.');
     }
 
     /** @test */
