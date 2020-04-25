@@ -12,7 +12,7 @@
 		<h5 class="header">Members</h5>
 		<div class="ui bulleted list">
 			<div class="item" v-for="member in members">
-                <router-link :to="{ path: '/member/', query: { member: member.id }}" >{{ member.name }}</router-link>
+                <router-link :to="{ path: '/member', query: { member: member.id }}" >{{ member.name }}</router-link>
 			</div>
 		</div>
         <form @submit.prevent="submit">

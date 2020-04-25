@@ -3,6 +3,8 @@ import CreateGroup from './components/CreateGroup';
 import GroupDashboard from './components/GroupDashboard';
 import GroupManage from './components/GroupManage';
 import MemberDetails from './components/MemberDetails';
+import SpacesList from './components/spaces/List';
+import SpacesCreate from './components/spaces/Create';
 
 export default {
 	mode: 'history',
@@ -26,6 +28,14 @@ export default {
         {
             path: '/member',
             component: MemberDetails
+        },
+        {
+            path: '/spaces',
+            component: SpacesList
+        },
+        {
+            path: '/spaces/create',
+            component: SpacesCreate
         }
 	]
 }

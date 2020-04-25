@@ -3,6 +3,7 @@
 		<router-link class="item" to="/home">Home</router-link>
 		<router-link v-if="!user.group_id" class="item" to="/group/create">Create Group</router-link>
 		<router-link v-else class="item" to="/group">Group Dashboard</router-link>
+         <router-link vif="user.group_id" class="item" to="/spaces">Spaces</router-link>
 	</div>
 </template>
 
