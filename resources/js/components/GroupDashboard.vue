@@ -1,18 +1,30 @@
 <template>
 	<div>
-        <h2 class="header" v-if="group">{{ group.name }}</h2>
+        <div>
+            <h2 class="header" v-if="group">{{ group.name }}</h2>
+            <router-link to="/group/manage" v-if="group.owner_id == user.id">
+                <button class="small ui labeled icon button">
+                    <i class="cog icon"></i>
+                    Manage
+                </button>
+            </router-link>
+        </div>
 		<h5 class="header">Members</h5>
 		<div class="ui bulleted list">
 			<div class="item" v-for="member in members">
-				{{ member.name }}
+                <router-link :to="{ path: '/member/', query: { member: member.id }}" >{{ member.name }}</router-link>
 			</div>
 		</div>
-        <router-link to="/group/manage" v-if="group.owner_id == user.id">
-            <button class="small ui labeled icon button">
-                <i class="cog icon"></i>
-                Manage
-            </button>
-        </router-link>
+        <form @submit.prevent="submit">
+            <div class="ui labeled input">
+                <div class="ui label">Invite Member</div>
+                <input name="name" type="text" v-model="email" required>
+            </div>
+            <button type="submit" class="ui primary button">Invite</button>
+        </form>
+        <div v-if="message" class="ui green message">
+            {{ message }}
+        </div>
 	</div>
 </template>
 
@@ -22,7 +34,9 @@ export default {
 		return {
 			user: '',
 			group: '',
-			members: []
+            email: '',
+			members: [],
+            message: ''
 		}
 	},
 	mounted: function() {
@@ -47,6 +61,27 @@ export default {
 			this.members = response.data;
 		}).
 		catch(this.$root.errorHandler);
-	}
+	},
+    methods: {
+        submit() {
+            axios.post('/api/group/' + this.group.id + '/invite', {
+                email: this.email
+            },  { withCredentials: true }).
+            then(response => {
+                // Display success message.
+                this.message = 'User added to group.';
+
+                // Empty email field.
+                this.email = '';
+
+                // Refresh members list.
+                return axios.get('/api/group/' + this.group.id + '/members', { withCredentials: true });
+            }).
+            then(response => {
+                this.members = response.data;
+            }).
+            catch(this.$root.errorHandler);
+        }
+    }
 };
 </script>

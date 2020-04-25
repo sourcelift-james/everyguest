@@ -2,6 +2,7 @@ import Home from './components/Home';
 import CreateGroup from './components/CreateGroup';
 import GroupDashboard from './components/GroupDashboard';
 import GroupManage from './components/GroupManage';
+import MemberDetails from './components/MemberDetails';
 
 export default {
 	mode: 'history',
@@ -21,6 +22,10 @@ export default {
         {
             path: '/group/manage',
             component: GroupManage
+        },
+        {
+            path: '/member',
+            component: MemberDetails
         }
 	]
 }
